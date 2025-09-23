@@ -5,7 +5,11 @@ const app = express();
 const port = 8080;
 
 // Middleware to parse JSON bodies
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:3000', 'https://localhost:3000', 'http://127.0.0.1:3000'],
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+}));
 
 app.use(express.json());
 
@@ -30,7 +34,7 @@ app.post('/create-web-call', async (req, res) => {
             payload,
             {
                 headers: {
-                    'Authorization': 'Bearer YOUR_API_KEY', // Replace with your actual Bearer token
+                    'Authorization': 'Bearer key_d85d0e5c9b89e5377b7407dc77e5', // Replace with your actual Bearer token
                     'Content-Type': 'application/json',
                 },
             }
