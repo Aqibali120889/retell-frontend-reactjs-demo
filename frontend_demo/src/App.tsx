@@ -12,16 +12,23 @@ const retellWebClient = new RetellWebClient();
 
 const App = () => {
   const [isCalling, setIsCalling] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState('Ready');
+  const [error, setError] = useState<string | null>(null);
 
   // Initialize the SDK
   useEffect(() => {
     retellWebClient.on("call_started", () => {
       console.log("call started");
+      setConnectionStatus('Connected');
+      setIsLoading(false);
     });
     
     retellWebClient.on("call_ended", () => {
       console.log("call ended");
       setIsCalling(false);
+      setConnectionStatus('Call Ended');
+      setIsLoading(false);
     });
     
     // When agent starts talking for the utterance
@@ -55,6 +62,10 @@ const App = () => {
     
     retellWebClient.on("error", (error) => {
       console.error("An error occurred:", error);
+      setError(`Connection error: ${error.message || 'Unknown error'}`);
+      setConnectionStatus('Error');
+      setIsLoading(false);
+      setIsCalling(false);
       // Stop the call
       retellWebClient.stopCall();
     });
@@ -63,15 +74,31 @@ const App = () => {
   const toggleConversation = async () => {
     if (isCalling) {
       retellWebClient.stopCall();
+      setConnectionStatus('Disconnecting...');
     } else {
-      const registerCallResponse = await registerCall(agentId);
-      if (registerCallResponse.access_token) {
-        retellWebClient
-          .startCall({
-            accessToken: registerCallResponse.access_token,
-          })
-          .catch(console.error);
-        setIsCalling(true); // Update button to "Stop" when conversation starts
+      setIsLoading(true);
+      setError(null);
+      setConnectionStatus('Connecting...');
+      
+      try {
+        const registerCallResponse = await registerCall(agentId);
+        if (registerCallResponse.access_token) {
+          retellWebClient
+            .startCall({
+              accessToken: registerCallResponse.access_token,
+            })
+            .catch((err) => {
+              console.error(err);
+              setError('Failed to start call');
+              setIsLoading(false);
+              setConnectionStatus('Error');
+            });
+          setIsCalling(true); // Update button to "Stop" when conversation starts
+        }
+      } catch (err) {
+        setError('Failed to register call. Please check your configuration.');
+        setIsLoading(false);
+        setConnectionStatus('Error');
       }
     }
   };
@@ -107,9 +134,47 @@ const App = () => {
   return (
     <div className="App">
       <header className="App-header">
-        <button onClick={toggleConversation}>
-          {isCalling ? "Stop" : "Start"}
+        <h1>Retell AI Voice Demo</h1>
+        <p>Click the button below to start a voice conversation with an AI agent</p>
+        
+        <div className="status-container">
+          <div className={`status-indicator ${connectionStatus.toLowerCase().replace(' ', '-')}`}>
+            Status: {connectionStatus}
+          </div>
+        </div>
+
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
+        )}
+
+        <button 
+          onClick={toggleConversation}
+          disabled={isLoading}
+          className={`call-button ${isCalling ? 'active' : ''} ${isLoading ? 'loading' : ''}`}
+        >
+          {isLoading ? 'Connecting...' : (isCalling ? 'End Call' : 'Start Call')}
         </button>
+
+        <div className="instructions">
+          <p><strong>Instructions:</strong></p>
+          <ol>
+            <li>Make sure your microphone is enabled</li>
+            <li>Click "Start Call" to begin the conversation</li>
+            <li>Speak naturally to the AI agent</li>
+            <li>Click "End Call" when you're done</li>
+          </ol>
+          
+          <div className="setup-note">
+            <p><strong>Note:</strong> Make sure you have:</p>
+            <ul>
+              <li>Replaced "ENTER_YOUR_AGENT_ID" with your actual Agent ID</li>
+              <li>Backend server running on localhost:8080</li>
+              <li>Valid API key configured in the backend</li>
+            </ul>
+          </div>
+        </div>
       </header>
     </div>
   );
