@@ -1,38 +1,226 @@
+/* Futuristic Neural AI Theme */
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
   min-height: 100vh;
+  background: radial-gradient(ellipse at center, #0a0a1a 0%, #000000 100%);
+  color: #ffffff;
+  font-family: 'Orbitron', 'Courier New', monospace;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Neural AI Header */
+.neural-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 20px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+}
+
+.neural-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-shift 3s ease-in-out infinite;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+/* Main Interface Container */
+.neural-interface {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  min-height: 100vh;
+  padding: 100px 20px 20px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Robot Avatar Area */
+.robot-avatar {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+  border: 2px solid #00ffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
+  animation: pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 50px rgba(0, 255, 255, 0.3);
+}
+
+.robot-icon {
+  font-size: 4rem;
+  color: #00ffff;
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Glass-morphism Transcript Panel */
+.transcript-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 20px;
+  width: 100%;
+  max-width: 600px;
+  min-height: 150px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+}
+
+.transcript-title {
+  color: #00ffff;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.transcript-content {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  min-height: 80px;
+  text-align: left;
+}
+
+/* Floating Microphone Button */
+.mic-button {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #ff00ff, #00ffff);
+  border: none;
   color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 30px rgba(255, 0, 255, 0.5);
+  animation: glow 2s ease-in-out infinite alternate;
+  margin: 20px;
 }
 
-.App-link {
-  color: #61dafb;
+.mic-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 50px rgba(255, 0, 255, 0.8);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.mic-button.active {
+  background: linear-gradient(45deg, #ff4444, #ffaa00);
+  animation: recording 1s ease-in-out infinite;
+}
+
+/* Status Indicators */
+.status-indicators {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.9rem;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00ff00;
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+.status-dot.inactive {
+  background: #ff4444;
+}
+
+/* Particle Background Animation */
+.particle-field {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #00ffff;
+  border-radius: 50%;
+  animation: float-particles 20s linear infinite;
+}
+
+/* Animations */
+@keyframes gradient-shift {
+  0%, 100% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(180deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1);
+    box-shadow: 0 0 50px rgba(0, 255, 255, 0.3);
   }
-  to {
-    transform: rotate(360deg);
+  50% { 
+    transform: scale(1.05);
+    box-shadow: 0 0 80px rgba(0, 255, 255, 0.6);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 30px rgba(255, 0, 255, 0.5); }
+  100% { box-shadow: 0 0 50px rgba(0, 255, 255, 0.8); }
+}
+
+@keyframes recording {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+}
+
+@keyframes float-particles {
+  0% {
+    transform: translateY(100vh) translateX(0px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-10vh) translateX(100px);
+    opacity: 0;
   }
 }
