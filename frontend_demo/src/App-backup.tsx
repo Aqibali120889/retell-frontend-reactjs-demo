@@ -1,23 +1,24 @@
 import React from "react";
 import "./App.css";
-import CosmicBackground from "./components/CosmicBackground.tsx";
-import Credits from "./components/ui/Credits.tsx";
-import ActionButtons from "./components/ui/ActionButtons.tsx";
-import Transcript from "./components/ui/Transcript.tsx";
-import Scene from "./components/canvas/Scene.tsx";
-import { useRetell } from "./hooks/useRetell.ts";
+import { useRetell } from "./hooks/useRetell";
+import Scene from "./components/canvas/Scene";
+import CosmicBackground from "./components/CosmicBackground";
+import Transcript from "./components/ui/Transcript";
+import ActionButtons from "./components/ui/ActionButtons";
+import Credits from "./components/ui/Credits";
 
 const App = () => {
   const { isCalling, isListening, isSpeaking, transcript, toggleCall } = useRetell();
 
   return (
     <div className="App">
+      {/* Cosmic particle background */}
       <CosmicBackground />
-      <Credits />
       
       {/* 3D Scene with robot */}
       <Scene isListening={isListening} isSpeaking={isSpeaking} />
       
+      {/* UI Components */}
       <Transcript 
         transcript={transcript} 
         isVisible={isCalling && transcript.length > 0} 
@@ -29,6 +30,8 @@ const App = () => {
         isSpeaking={isSpeaking}
         onToggleCall={toggleCall}
       />
+      
+      <Credits />
       
       {/* Cinematic vignette overlay */}
       <div
