@@ -34,14 +34,17 @@ type GLTFResult = GLTF & {
   animations: GLTFAction[]
 }
 
-interface MiniRobotProps extends JSX.IntrinsicElements['group'] {
+interface MiniRobotProps {
   isListening?: boolean;
   isSpeaking?: boolean;
+  position?: [number, number, number];
+  scale?: [number, number, number];
+  rotation?: [number, number, number];
 }
 
-export function MiniRobot({ isListening = false, isSpeaking = false, ...props }: MiniRobotProps) {
-  const groupRef = useRef<THREE.Group>(null)
-  const headRef = useRef<THREE.Group>(null)
+export function MiniRobot({ isListening = false, isSpeaking = false, position, scale, rotation }: MiniRobotProps) {
+  const groupRef = useRef<THREE.Group>(null!)
+  const headRef = useRef<THREE.Group>(null!)
   const { nodes, materials } = useGLTF('/mini_robot.glb') as GLTFResult
   
   // Animation state
@@ -105,7 +108,7 @@ export function MiniRobot({ isListening = false, isSpeaking = false, ...props }:
   }, [isSpeaking, isListening, materials])
 
   return (
-    <group ref={groupRef} {...props} dispose={null}>
+    <group ref={groupRef} position={position} scale={scale} rotation={rotation} dispose={null}>
       <group ref={headRef} rotation={[-3.14, 0, 0]}>
         <mesh castShadow receiveShadow geometry={nodes.Object_2.geometry} material={materials.Acetal_Resin_White_2} />
         <mesh castShadow receiveShadow geometry={nodes.Object_3.geometry} material={materials['Aluminum_-_Anodized_Glossy_Grey']} />
